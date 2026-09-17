@@ -1,0 +1,15 @@
+{
+  "id": "marvelous-museum-giants-ants",
+  "version": "2.0.0",
+  "title": "The Marvelous Museum of Giants & Ants",
+  "subtitle": "Build it. Prove it. Share it.",
+  "framework": "SPARK",
+  "sequence": ["Select", "Perceive", "Alter", "Realize", "Prove", "Keep"],
+  "modes": ["giants", "ants"],
+  "learning_focus": ["ratio", "scale factor", "proportion", "measurement", "geometry", "art/design", "making", "mathematical explanation"],
+  "minimum_measurements": 8,
+  "evidence": ["object/build plan", "structure analysis", "8+ measurements", "predictions and checked calculations", "physical build", "construction evidence", "two-measurement proportionality proof", "written explanation", "human validation"],
+  "privacy": {"public_gallery": "Publish artifact/proof selectively; do not publish student-private fields by default.", "storage": "Browser localStorage only in v2 static prototype."},
+  "credential": "Master of Scale",
+  "license": "MIT"
+}
