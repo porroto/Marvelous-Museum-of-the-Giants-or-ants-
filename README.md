@@ -1,39 +1,45 @@
 # 🏛️ The Marvelous Museum of Giants & Ants
 
-> **Build it. Prove it. Share it.** 🚀
+## 🚀 [ENTER THE MUSEUM](https://porroto.github.io/Marvelous-Museum-of-the-Giants-or-ants-/)
 
-A hands-on **Math × Art × Making** OpenLab mission where students transform everyday objects into giants—or shrink them for the ants. Learners use measurement, scale, ratio, and proportion to predict, design, build, prove their mathematics, and exhibit what they made.
+**The classroom is the workshop. The museum is the destination.**
 
-## ✨ Mission architecture
+A hands-on **Math × Art × Making** OpenLab mission where students transform everyday objects into giants—or shrink them for the ants. Using measurement, scale, ratio, and proportion, learners predict, design, build, prove their mathematics, and exhibit what they made.
+
+> **Build it. Prove it. Share it.**
+
+### Mission journey
 
 **Select → Perceive → Alter → Realize → Prove → Keep**
 
 Students choose an object and build strategy, study its structure before measuring, record at least eight measurements, apply one consistent scale factor, construct the transformed artifact, prove proportionality with evidence, reflect on the process, and preserve the work in a Proof-of-Learning Passport.
 
-## 🌎 Choose your world
+### Two worlds
 
-**Land of the Giants** scales an object up. **Land of the Ants** scales it down. The mathematical law remains the same: every corresponding dimension changes by the same scale factor.
+- 🏛️ **Giants** — scale an object up.
+- 🐜 **Ants** — scale an object down.
 
-## 🧠 Evidence before automation
+The same mathematical principle governs both worlds: every corresponding dimension changes by the same scale factor.
 
-The app asks learners to make a prediction before checking the calculation. The computer supports reasoning; it does not replace it. Mathematical evidence, the physical artifact, construction documentation, reflection, and human validation form the proof of learning.
+### Evidence-first
 
-## 🎟️ The Marvelous Museum
+Students predict transformed dimensions before checking calculations. The computer supports the reasoning; it does not replace it. The physical artifact, mathematical proof, construction evidence, reflection, and human validation together form the proof of learning.
 
-The destination is not a score screen. It is an exhibition. Physical creations become museum exhibits and can eventually connect through privacy-safe QR placards to digital proof pages and student portfolios.
+### The museum
 
-## 🏅 Credential
+The final destination is not a score screen. It is an exhibition. Physical creations can become museum exhibits connected to privacy-safe digital proof pages and student portfolios.
 
-Completing the mission unlocks the prototype **Master of Scale** credential.
+Successful completion unlocks the prototype **Master of Scale** credential.
 
-## 🚀 Run it
+### Run locally
 
-No dependencies. No build tools. Open `index.html` in a browser, or deploy the repository as a static site with GitHub Pages.
+Open `index.html` in a browser. No build system or dependencies are required.
 
-Student mission state is stored locally in the browser. V2 deliberately does not upload student photos or private records.
+### License
 
-## OpenLab
+MIT License. See `LICENSE`.
 
-**The world is your laboratory.**
+---
 
-MIT licensed.
+**OpenLab Learning Center**  
+*The world is your laboratory.*
