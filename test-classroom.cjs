@@ -1,0 +1,29 @@
+const { chromium } = require('playwright');
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+(async () => {
+ const browser = await chromium.launch({headless:true});
+ const page = await browser.newPage();
+ const errors=[];page.on('pageerror', e=>errors.push(e.message));
+ await page.route('https://museum.test/**',route=>route.fulfill({contentType:'text/html',body:fs.readFileSync(__dirname+'/index.html','utf8')}));
+ const base=()=>({completionVersion:1,mode:'giants',name:'Demo',class:'Test',object:'Box',materials:'Cardboard',plan:'Fold and join',structure:'Rectangular faces',unit:'cm',factor:2,m:Array.from({length:8},(_,i)=>({n:'Edge '+i,o:'3',p:'6',check:true})),build:Array(5).fill(true),before:'Sketch in notebook',during:'Teacher observed joints',after:'Model on table',difference:'No changes needed',proof:'3 to 6 and 4 to 8 both double.',hardest:'Joining edges with tabs',proud:'My matching proportions',validate:Array(5).fill(true)});
+ async function load(s){await page.goto('https://museum.test');await page.evaluate(s=>localStorage.setItem('marvelous-museum-v2',JSON.stringify(s)),s);await page.reload();}
+ async function room(n){await page.locator(`[data-r="${n}"]`).click();}
+ async function locked(){assert.match(await page.locator('.badge').innerText(),/incomplete/);}
+ const state=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('marvelous-museum-v2')));
+ let count=0;async function test(name,fn){await fn();count++;console.log('PASS '+name);}
+ await test('Incorrect checked predictions never award credential',async()=>{let s=base();s.m.forEach(x=>x.p='999');await load(s);await room(6);await locked();assert.equal(await page.locator('[data-v]:disabled').count(),5);});
+ await test('Each required evidence, reflection, build item, and approval gates completion',async()=>{
+  for(const key of ['object','materials','plan','structure','before','during','after','difference','proof','hardest','proud']){let s=base();s[key]='   ';await load(s);await room(6);await locked();}
+  for(const key of ['build','validate'])for(let i=0;i<5;i++){let s=base();s[key][i]=false;await load(s);await room(6);await locked();}
+ });
+ await test('Nonfinite, blank, zero, negative originals and invalid predictions rejected',async()=>{for(const [k,v] of [['o',''],['o','0'],['o','-2'],['o','Infinity'],['p',''],['p','Infinity'],['p','-6'],['p','6.01']]){let s=base();s.m[0][k]=v;await load(s);await room(6);await locked();}});
+ await test('Approval updates badge immediately and persists across reload',async()=>{let s=base();s.validate=Array(5).fill(false);await load(s);await room(6);for(let i=0;i<5;i++)await page.locator(`[data-v="${i}"]`).check();assert.equal(await page.locator('.badge').innerText(),'🏅 MASTER OF SCALE');await page.reload();await room(6);assert.equal(await page.locator('.badge').innerText(),'🏅 MASTER OF SCALE');await page.locator('[data-v="4"]').uncheck();await locked();});
+ await test('Every text edit clears approval without stealing typing focus',async()=>{for(const [r,k] of [[0,'name'],[0,'class'],[1,'object'],[1,'materials'],[1,'plan'],[2,'structure'],[4,'before'],[4,'during'],[4,'after'],[4,'difference'],[5,'proof'],[5,'hardest'],[5,'proud']]){await load(base());await room(r);await page.locator('#'+k).fill('Changed work');assert.deepEqual((await state()).validate,Array(5).fill(false));assert.equal(await page.locator('#'+k).inputValue(),'Changed work');assert.match(await page.locator('#approval-notice').innerText(),/Work changed/);}});
+ await test('Measurement edits clear row feedback, check, and approval',async()=>{for(const k of ['n','o','p']){await load(base());await room(3);await page.locator(`[data-${k}="0"]`).fill(k==='n'?'New edge':'7');let s=await state();assert.equal(s.m[0].check,false);assert.deepEqual(s.validate,Array(5).fill(false));assert.equal(await page.locator('[data-result="0"]').count(),0);}});
+ await test('Mode, factor, and unit reset all checks and approvals',async()=>{for(const kind of ['mode','factor','unit']){await load(base());if(kind==='mode'){await page.locator('[data-mode="ants"]').click();}else{await room(kind==='factor'?3:2);await page.locator('#'+kind).selectOption(kind==='factor'?'3':'mm');}let s=await state();assert(s.m.every(x=>x.check===false));assert(s.validate.every(x=>x===false));}});
+ await test('Build checklist edit clears approval',async()=>{await load(base());await room(4);await page.locator('[data-b="0"]').uncheck();assert((await state()).validate.every(x=>x===false));});
+ await test('Legacy saves retain work but require new math and human review',async()=>{let s=base();delete s.completionVersion;await load(s);let saved=await state();assert.equal(saved.object,'Box');assert.equal(saved.m[0].p,'6');assert(saved.m.every(x=>!x.check));assert(saved.validate.every(x=>!x));await room(6);await locked();});
+ await test('Ants rounding, corrected answers, missing-work links, and mobile width',async()=>{let s=base();s.mode='ants';s.factor=3;s.m.forEach(x=>{x.o='1';x.p='0.33';x.check=false});s.validate=Array(5).fill(false);await load(s);await room(6);await page.locator('[data-go="3"]').first().click();for(let i=0;i<8;i++)await page.locator(`[data-c="${i}"]`).click();assert.equal(await page.locator('.ok').count(),8);await room(6);for(let i=0;i<5;i++)await page.locator(`[data-v="${i}"]`).check();assert.equal(await page.locator('.badge').innerText(),'🏅 MASTER OF SCALE');await page.setViewportSize({width:390,height:844});for(let r=0;r<7;r++){await room(r);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}await page.screenshot({path:__dirname+'/keep-mobile.png',fullPage:true});});
+ assert.deepEqual(errors,[]);console.log(`${count} browser test groups passed; no browser runtime errors.`);await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
